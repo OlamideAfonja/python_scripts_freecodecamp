@@ -1,0 +1,43 @@
+def hanoi_solver(n):
+    # Initialize the rods: Rod A has all disks, B and C are empty
+    rods = {
+        'A': list(range(n, 0, -1)),
+        'B': [],
+        'C': []
+    }
+    
+    moves_history = []
+
+    def record_state():
+        # Formats the rods as: [3, 2, 1] [] []
+        state = f"{rods['A']} {rods['B']} {rods['C']}"
+        moves_history.append(state)
+
+    def move_disk(disks, source, target, auxiliary):
+        if disks == 1:
+            # Move the smallest disk
+            disk = rods[source].pop()
+            rods[target].append(disk)
+            record_state()
+            return
+
+        # Step 1: Move n-1 disks from source to auxiliary
+        move_disk(disks - 1, source, auxiliary, target)
+
+        # Step 2: Move the nth disk from source to target
+        disk = rods[source].pop()
+        rods[target].append(disk)
+        record_state()
+
+        # Step 3: Move n-1 disks from auxiliary to target
+        move_disk(disks - 1, auxiliary, target, source)
+
+    # Record the initial state before any moves
+    record_state()
+    
+    # Start the recursive solver
+    # We want to move all disks from A to C using B as helper
+    move_disk(n, 'A', 'C', 'B')
+
+    # Join all recorded states with newlines
+    return "\n".join(moves_history)

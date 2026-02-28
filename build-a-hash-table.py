@@ -1,0 +1,38 @@
+class HashTable:
+    def __init__(self):
+        # Initialize an empty dictionary to store our hashed buckets
+        self.collection = {}
+
+    def hash(self, string):
+        # Sum the Unicode values of each character using ord()
+        return sum(ord(char) for char in string)
+
+    def add(self, key, value):
+        hash_key = self.hash(key)
+        
+        # If the hash index doesn't exist, create a new nested dictionary
+        if hash_key not in self.collection:
+            self.collection[hash_key] = {}
+            
+        # Store the key-value pair inside the nested dictionary at that hash index
+        self.collection[hash_key][key] = value
+
+    def lookup(self, key):
+        hash_key = self.hash(key)
+        
+        # Check if the hash index exists and if the specific key is in that bucket
+        if hash_key in self.collection and key in self.collection[hash_key]:
+            return self.collection[hash_key][key]
+        
+        return None
+
+    def remove(self, key):
+        hash_key = self.hash(key)
+        
+        # Check if the hash index exists and the specific key is present
+        if hash_key in self.collection and key in self.collection[hash_key]:
+            del self.collection[hash_key][key]
+            
+            # Optional: Clean up the hash index if the nested dictionary is now empty
+            if not self.collection[hash_key]:
+                del self.collection[hash_key]
